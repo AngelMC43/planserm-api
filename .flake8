@@ -1,0 +1,7 @@
+[flake8]
+
+exclude = .venv, .git, .mypycache, .pytest_cache, .vscode, __pycache__
+max-line-length = 120
+statistics = True
+plugins = flake8-docsrings
+ignore = D100, A003
