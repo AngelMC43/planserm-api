@@ -32,7 +32,7 @@ def get_users(db: Session = Depends(get_db)):
 
 # aqui llamo al controller(realmente llamaria a la ruta route) para hacer flujo
 
-@app.get('/api/customers', response_model=list[CustomId])
+@app.get('/api/clients', response_model=list[CustomId])
 def get_customers(db: Session = Depends(get_db)):
     return customer_services.get_all_customers(db)
 
