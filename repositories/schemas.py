@@ -4,13 +4,10 @@ from pydantic import BaseModel
 class UserData(BaseModel):
     name: str
     password: str
-
-
-class UserId(UserData):
     id: int
 
 
-class CustomData(BaseModel):
+class ClientsData(BaseModel):
     id: int
     comunidad: str
     presidente: str
@@ -19,7 +16,3 @@ class CustomData(BaseModel):
     servicios: str
     telefono_contacto: int
     domicilio_presidente: str
-
-
-class CustomId(CustomData):
-    id: int

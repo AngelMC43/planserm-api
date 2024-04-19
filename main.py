@@ -1,10 +1,14 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
 
-from typing import Text, Optional
-from datetime import datetime
-from enum import Enum
+import crud
+from database import engine, localSession
+from schemas import ClientsData, UserData
+from comunidades_models import Clients
+
+from pydantic import BaseModel
+import uvicorn
+
 
 from repositories import user_repository
 from database import engine, localSession
@@ -27,81 +31,59 @@ def get_db():
 
 @app.get('/api/users', response_model=list[UserId])
 def get_users(db: Session = Depends(get_db)):
-    return user_repository.get_users(db=db)
+    return crud.get_users(db=db)
 
 
-# aqui llamo al controller(realmente llamaria a la ruta route) para hacer flujo
-
-@app.get('/api/clients', response_model=list[CustomId])
-def get_customers(db: Session = Depends(get_db)):
-    return customer_services.get_all_customers(db)
-
-
-class Libro(BaseModel):
-    titulo: str
-    autor: str
-    paginas: int
-    editorial: Optional[str]
+@app.get('/api/users/{id:int}')
+def get_user(id, db: Session = Depends(get_db)):
+    user_by_id = crud.get_user_by_id(db=db, id=id)
+    if user_by_id:
+        return user_by_id
+    raise HTTPException(status_code=400, detail='error, no hay na')
 
 
-class Movies (BaseModel):
-    id: int
-    title: str
-    author: str
-    year: int
-    content: Text
-    created: datetime = datetime.now()
-    published: bool = False
+@app.post('api/users/{id:int}', reponse_model=[UserId])
+def create_user(user: UserId, db: Session = Depends(get_db)):
+    check_name = crud.get_user_by_id(db=db, id=user.id)
+    if check_name:
+        raise HTTPException(status_code=404, detail='Ya existe')
+    return crud.get_user_by_id(db=db, id=id)
+
+    # aqui llamo al controller(realmente llamaria a la ruta route) para hacer flujo
 
 
-class ModelName(str, Enum):
-    alexnet = "alexnet"
-    resnet = "resnet"
-    lenet = "lenet"
+@ app.get('/api/clients', response_model=list[CustomId])
+def get_clients(db: Session = Depends(get_db)):
+    client = crud.get_all_customers(db)
+    return client
 
 
-muestras = []
+@ app.get('/api/clients/{id}', response_model=list[CustomId])
+def get_client_id(db: Session = Depends(get_db)):
+    client = customer_services.get_all_customers(db)
+    return client
 
 
-@app.get('/')
+class Client(BaseModel):
+    comunidad: str
+    presidente: str
+    direccion: str
+    municipio: str
+    servicios: str
+    telefono_contacto: int
+    domicilio_presidente: str
+
+
+@ app.post('/api/clients')
+def create_client(client: Client, db: Session = Depends(get_db)):
+    client.append(client)
+    return {'successful deleted'}
+
+
+@ app.get('/')
 def root():
     return {'message': 'Conectado'}
 
 
-@app.get('/libros/{id}')
-def show_book(id: int):
-    return {'data': id}
-
-
-@app.post('/libros')
-def insert_book(book: Libro):
-    return {'message': f'El libro {book.titulo} se ha insertado'}
-
-
-@app.get('/pelicula')
-def show_movie():
-    listado = list(map(lambda movie: movie["id"], muestras))
-
-    return listado
-
-
-@app.post('/pelicula')
-def add_movie(movie: Movies):
-    muestras.append(movie.dict())
-
-    return {'messsage': f'Se ha insertado la peli {movie.title}'}
-
-
-@app.get('/models/{models_name}')
-def get_model(models_name: ModelName, needy: str):
-    if models_name is ModelName.alexnet:
-        return {
-            "model_name": "model_name",
-            "message": "Deep Learning FTW!",
-            "needy": {needy}
-        }
-
-    if models_name == "lenet":
-        return {"model_name": "model_name", "message": "LeCNN all the images"}
-
-    return {"model_name": "model_name", "message": "Have some residuals"}
+if __name__ == '__main__':
+    uvicorn.run(app, host="127.0.0.1", port=8000)
