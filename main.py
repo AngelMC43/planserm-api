@@ -3,16 +3,10 @@ from sqlalchemy.orm import Session
 
 import crud
 from database import engine, localSession
-from schemas import ClientsData, UserData
-from comunidades_models import Clients
-
 from pydantic import BaseModel
 import uvicorn
 
-
-from repositories import user_repository
-from database import engine, localSession
-from repositories.schemas import UserId, CustomId
+from repositories.schemas import UserData
 from repositories.models.user_models import Base
 from services import customer_services
 
@@ -29,9 +23,10 @@ def get_db():
         db.close()
 
 
-@app.get('/api/users', response_model=list[UserId])
+@ app.get('/api/users')
 def get_users(db: Session = Depends(get_db)):
-    return crud.get_users(db=db)
+    users = crud.get_users(db)
+    return users
 
 
 @app.get('/api/users/{id:int}')
@@ -42,8 +37,8 @@ def get_user(id, db: Session = Depends(get_db)):
     raise HTTPException(status_code=400, detail='error, no hay na')
 
 
-@app.post('api/users/{id:int}', reponse_model=[UserId])
-def create_user(user: UserId, db: Session = Depends(get_db)):
+@app.post('api/users/{id:int}', response_model=list[UserData])
+def create_user(user: UserData, db: Session = Depends(get_db)):
     check_name = crud.get_user_by_id(db=db, id=user.id)
     if check_name:
         raise HTTPException(status_code=404, detail='Ya existe')
@@ -52,15 +47,15 @@ def create_user(user: UserId, db: Session = Depends(get_db)):
     # aqui llamo al controller(realmente llamaria a la ruta route) para hacer flujo
 
 
-@ app.get('/api/clients', response_model=list[CustomId])
+@ app.get('/api/clients')
 def get_clients(db: Session = Depends(get_db)):
-    client = crud.get_all_customers(db)
+    client = crud.get_clients(db)
     return client
 
 
-@ app.get('/api/clients/{id}', response_model=list[CustomId])
+@ app.get('/api/clients/{id}')
 def get_client_id(db: Session = Depends(get_db)):
-    client = customer_services.get_all_customers(db)
+    client = customer_services.get_clients(db)
     return client
 
 

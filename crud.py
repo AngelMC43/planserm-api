@@ -1,11 +1,16 @@
 from sqlalchemy.orm import Session
 
-from models import Clients
-from squema import ClientsData, UserData
+from repositories.models.comunidades_models import Clients
+from repositories.models.user_models import User
+from repositories.schemas import ClientsData
+
+
+def get_users(db: Session):
+    return db.query(User).all()
 
 
 def get_user_by_id(db: Session, id: int):
-    return db.query(UserData).filter(UserData.id == id).first()
+    return db.query(User).filter(User.id == id).first()
 
 
 def get_user_by_name(db: Session, name: str):

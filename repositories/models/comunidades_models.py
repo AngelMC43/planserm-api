@@ -14,11 +14,3 @@ class Clients(Base):
     servicios = Column(ARRAY(String()))
     telefono_contacto = Column(Integer)
     domicilio_presidente = Column(String(20))
-
-
-class Users(Base):
-    __tablename__ = 'Users'
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(20), index=True, )
-    password = Column(String(20), index=True)

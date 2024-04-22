@@ -2,9 +2,9 @@ from pydantic import BaseModel
 
 
 class UserData(BaseModel):
+    id: int
     name: str
     password: str
-    id: int
 
 
 class ClientsData(BaseModel):
