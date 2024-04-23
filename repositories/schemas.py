@@ -2,13 +2,15 @@ from pydantic import BaseModel
 
 
 class UserData(BaseModel):
-    id: int
     name: str
     password: str
 
 
-class ClientsData(BaseModel):
+class UserId(UserData):
     id: int
+
+
+class ClientsData(BaseModel):
     comunidad: str
     presidente: str
     direccion: str
@@ -16,3 +18,7 @@ class ClientsData(BaseModel):
     servicios: str
     telefono_contacto: int
     domicilio_presidente: str
+
+
+class ClientsId(ClientsData):
+    id: int
