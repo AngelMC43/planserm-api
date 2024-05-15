@@ -2,7 +2,9 @@ from sqlalchemy.orm import Session
 
 from repositories.models.comunidades_models import Clients
 from repositories.models.user_models import User
-from repositories.schemas import ClientsData, UserData
+from repositories.models.labors_models import Labors
+
+from repositories.schemas import ClientsData, UserData, LaborsData
 
 
 def get_users(db: Session):
@@ -54,3 +56,20 @@ def create_client(db: Session, client: ClientsData):
     db.commit()
     db.flush(new_client)
     return new_client
+
+
+# LABORS
+
+
+def get_labors(db: Session):
+    return db.query().all(Labors)
+
+
+def create_labor(db: Session, labor: LaborsData):
+    new_labor = Labors(
+        tipo=labor.tipo,
+    )
+    db.add(new_labor)
+    db.commit()
+    db.flush(new_labor)
+    return new_labor

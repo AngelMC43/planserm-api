@@ -52,6 +52,8 @@ def create_user(user: UserData, db: Session = Depends(get_db)):
 
 # aqui llamo al controller(realmente llamaria a la ruta route) para hacer flujo
 
+# CLIENTS
+
 
 @ app.get('/api/clients')
 def get_clients(db: Session = Depends(get_db)):
@@ -74,6 +76,9 @@ def create_client(client: ClientsData, db: Session = Depends(get_db)):
     return crud.create_client(db=db, client=client)
 
 
+# LABORS
+
+@ app.get()
 @ app.get('/')
 def root():
     return {'message': 'Conectado'}

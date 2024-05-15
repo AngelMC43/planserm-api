@@ -16,9 +16,17 @@ class ClientsData(BaseModel):
     direccion: str
     municipio: str
     servicios: str
-    telefono_contacto: int
+    telefono_contacto: str
     domicilio_presidente: str
 
 
 class ClientsId(ClientsData):
+    id: int
+
+
+class LaborsData(BaseModel):
+    tipos: str
+
+
+class LaborsId(LaborsData):
     id: int

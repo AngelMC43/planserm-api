@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ARRAY
+from sqlalchemy import Column, String, Integer
 
 from database import Base
 
@@ -11,6 +11,6 @@ class Clients(Base):
     presidente = Column(String(30))
     direccion = Column(String(70))
     municipio = Column(String(30))
-    servicios = Column(ARRAY(String()))
-    telefono_contacto = Column(Integer)
+    servicios = Column(String(255))
+    telefono_contacto = Column(String(10))
     domicilio_presidente = Column(String(20))
